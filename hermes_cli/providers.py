@@ -201,6 +201,7 @@ HERMES_OVERLAYS: Dict[str, HermesOverlay] = {
     ),
     "general-agent": HermesOverlay(
         transport="openai_chat",
+        is_aggregator=True,
         extra_env_vars=("GENERAL_AGENT_API_KEY",),
         base_url_override="http://localhost:7000/v1",
         base_url_env_var="GENERAL_AGENT_BASE_URL",

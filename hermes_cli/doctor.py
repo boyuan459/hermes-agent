@@ -399,6 +399,7 @@ def run_doctor(args):
                 "huggingface",
                 "lmstudio",
                 "nous",
+                "general-agent",
             }
             if (
                 default_model
@@ -992,6 +993,33 @@ def run_doctor(args):
     print()
     print(color("◆ API Connectivity", Colors.CYAN, Colors.BOLD))
     
+    from hermes_cli.config import get_env_value as _get_env_value
+    general_agent_key = _get_env_value("GENERAL_AGENT_API_KEY")
+    if general_agent_key:
+        general_agent_base = (
+            _get_env_value("GENERAL_AGENT_BASE_URL") or "http://localhost:7000"
+        ).rstrip("/")
+        print("  Checking General Agent API...", end="", flush=True)
+        try:
+            import httpx
+            response = httpx.get(
+                f"{general_agent_base}/v1/models",
+                headers={"Authorization": f"Bearer {general_agent_key}"},
+                timeout=10,
+            )
+            if response.status_code == 200:
+                print(f"\r  {color('✓', Colors.GREEN)} General Agent API                          ")
+            elif response.status_code == 401:
+                print(f"\r  {color('✗', Colors.RED)} General Agent API {color('(invalid API key)', Colors.DIM)}                ")
+                issues.append("Check GENERAL_AGENT_API_KEY in .env")
+            else:
+                print(f"\r  {color('✗', Colors.RED)} General Agent API {color(f'(HTTP {response.status_code})', Colors.DIM)}                ")
+        except Exception as e:
+            print(f"\r  {color('✗', Colors.RED)} General Agent API {color(f'({e})', Colors.DIM)}                ")
+            issues.append("Check General Agent connectivity and GENERAL_AGENT_BASE_URL")
+    else:
+        check_warn("General Agent API", "(not configured)")
+
     openrouter_key = os.getenv("OPENROUTER_API_KEY")
     if openrouter_key:
         print("  Checking OpenRouter API...", end="", flush=True)
