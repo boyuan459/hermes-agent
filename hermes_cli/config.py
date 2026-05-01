@@ -1249,6 +1249,13 @@ OPTIONAL_ENV_VARS = {
         "category": "provider",
         "advanced": True,
     },
+    "GENERAL_AGENT_API_KEY": {
+        "description": "General Agent API key",
+        "prompt": "General Agent API key",
+        "password": True,
+        "category": "provider",
+        "advanced": True,
+    },
     "GOOGLE_API_KEY": {
         "description": "Google AI Studio API key (also recognized as GEMINI_API_KEY)",
         "prompt": "Google AI Studio API key",
