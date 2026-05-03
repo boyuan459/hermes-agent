@@ -1189,6 +1189,19 @@ def list_authenticated_providers(
                     if any(os.environ.get(ev) for ev in pcfg.api_key_env_vars):
                         has_creds = True
                         break
+        # Fallback: check ~/.hermes/.env via get_env_value (os.environ misses keys
+        # stored only in the .env file, not exported to the shell environment).
+        if not has_creds and overlay.auth_type == "api_key":
+            try:
+                from hermes_cli.config import get_env_value
+                for _key in (pid, hermes_slug):
+                    pcfg = _auth_registry.get(_key)
+                    if pcfg and pcfg.api_key_env_vars:
+                        if any(get_env_value(ev) for ev in pcfg.api_key_env_vars):
+                            has_creds = True
+                            break
+            except Exception:
+                pass
         # Check auth store and credential pool for non-env-var credentials.
         # This applies to OAuth providers AND api_key providers that also
         # support OAuth (e.g. anthropic supports both API key and Claude Code
@@ -1241,7 +1254,7 @@ def list_authenticated_providers(
         if not has_creds:
             continue
 
-        if hermes_slug in {"copilot", "copilot-acp"}:
+        if hermes_slug in {"copilot", "copilot-acp", "general-agent"}:
             model_ids = provider_model_ids(hermes_slug)
         # For aws_sdk providers (bedrock), use live discovery so the list
         # reflects the active region (eu.*, ap.*) not the static us.* list.

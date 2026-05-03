@@ -199,6 +199,13 @@ HERMES_OVERLAYS: Dict[str, HermesOverlay] = {
         transport="bedrock_converse",
         auth_type="aws_sdk",
     ),
+    "general-agent": HermesOverlay(
+        transport="openai_chat",
+        is_aggregator=True,
+        extra_env_vars=("GENERAL_AGENT_API_KEY",),
+        base_url_override="http://localhost:7000/v1",
+        base_url_env_var="GENERAL_AGENT_BASE_URL",
+    ),
 }
 
 
@@ -333,6 +340,10 @@ ALIASES: Dict[str, str] = {
     "gmi-cloud": "gmi",
     "gmicloud": "gmi",
 
+    # general-agent
+    "general-agent-provider": "general-agent",
+    "general_agent": "general-agent",
+
     # Local server aliases → virtual "local" concept (resolved via user config)
     "lmstudio": "lmstudio",
     "lm-studio": "lmstudio",
@@ -359,6 +370,7 @@ _LABEL_OVERRIDES: Dict[str, str] = {
     "tencent-tokenhub": "Tencent TokenHub",
     "lmstudio": "LM Studio",
     "local": "Local endpoint",
+    "general-agent": "General Agent",
     "bedrock": "AWS Bedrock",
     "ollama-cloud": "Ollama Cloud",
 }

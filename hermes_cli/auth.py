@@ -338,6 +338,14 @@ PROVIDER_REGISTRY: Dict[str, ProviderConfig] = {
         api_key_env_vars=("AI_GATEWAY_API_KEY",),
         base_url_env_var="AI_GATEWAY_BASE_URL",
     ),
+    "general-agent": ProviderConfig(
+        id="general-agent",
+        name="General Agent",
+        auth_type="api_key",
+        inference_base_url="http://localhost:7000/v1",
+        api_key_env_vars=("GENERAL_AGENT_API_KEY",),
+        base_url_env_var="GENERAL_AGENT_BASE_URL",
+    ),
     "opencode-zen": ProviderConfig(
         id="opencode-zen",
         name="OpenCode Zen",
@@ -1189,6 +1197,7 @@ def resolve_provider(
         "aws": "bedrock", "aws-bedrock": "bedrock", "amazon-bedrock": "bedrock", "amazon": "bedrock",
         "go": "opencode-go", "opencode-go-sub": "opencode-go",
         "kilo": "kilocode", "kilo-code": "kilocode", "kilo-gateway": "kilocode",
+        "general-agent-provider": "general-agent", "general_agent": "general-agent",
         "lmstudio": "lmstudio", "lm-studio": "lmstudio", "lm_studio": "lmstudio",
         # Local server aliases — route through the generic custom provider
         "ollama": "custom", "ollama_cloud": "ollama-cloud",
